@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calendrier des compétitions de tir · Essonne 2026-2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F5F2;--card:#FFFFFF;--ink:#15191C;--muted:#5A6168;--line:#DADFD8;
+  --accent:#1F3A5F;--accent-soft:#E3EAF3;--warn:#A4500A;--warn-bg:#FCEFDD;
+  --urgent:#B42318;--urgent-bg:#FDE8E6;--chip:#FFFFFF;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#111416;--card:#1A1E21;--ink:#E7EAEC;--muted:#9AA2A9;--line:#2B3135;
+  --accent:#9CBCE4;--accent-soft:#1E2B3A;--warn:#F2B665;--warn-bg:#35270F;
+  --urgent:#F4978E;--urgent-bg:#3B1B18;--chip:#1A1E21;}}
+:root[data-theme="dark"]{
+  --paper:#111416;--card:#1A1E21;--ink:#E7EAEC;--muted:#9AA2A9;--line:#2B3135;
+  --accent:#9CBCE4;--accent-soft:#1E2B3A;--warn:#F2B665;--warn-bg:#35270F;
+  --urgent:#F4978E;--urgent-bg:#3B1B18;--chip:#1A1E21;}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 48px}
+h1,h2,.num{font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif}
+header{display:flex;align-items:center;gap:16px;padding:24px 0 16px}
+header svg{flex:none;width:64px;height:64px}
+h1{font-size:30px;line-height:1.05;margin:0;font-weight:700;letter-spacing:.2px}
+.sub{margin:4px 0 0;color:var(--muted);font-size:14px}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.profile{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:16px}
+.profile summary{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:14px 16px;cursor:pointer;font-weight:600}
+.profile summary::-webkit-details-marker{display:none}
+.profile summary .hint{font-weight:400;color:var(--muted);font-size:14px}
+.profile summary .chev{transition:transform .2s}
+.profile[open] summary .chev{transform:rotate(180deg)}
+.pbody{padding:0 16px 16px;border-top:1px solid var(--line)}
+.grp{margin-top:14px}
+.grp h2{font-size:17px;font-weight:600;margin:0 0 8px;display:flex;justify-content:space-between;align-items:baseline}
+.grp h2 .act{font-family:"Barlow",sans-serif;font-size:13px;font-weight:500}
+.act button{background:none;border:none;color:var(--accent);padding:2px 4px;text-decoration:underline;text-underline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:7px 12px;font-size:14px;min-height:36px}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--ink);font-weight:500}
+.chip.small{font-size:13px;padding:5px 10px;min-height:32px}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.intro{margin:0 0 10px;font-size:14px;color:var(--muted)}
+#more[hidden]{display:none}
+.fam-block{margin-top:10px;padding-left:10px;border-left:3px solid var(--line)}
+.fam-block p{margin:0 0 6px;font-size:13px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:none;background:var(--chip);padding:8px 14px;font-size:14px}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--paper);font-weight:600}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;font-size:15px}
+.toggle input{width:20px;height:20px;accent-color:var(--accent);flex:none}
+.deadlines{margin:0 0 20px}
+.deadlines h2{font-size:19px;margin:0 0 8px;font-weight:600}
+.dl-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x mandatory}
+.dl{flex:0 0 min(78%,260px);scroll-snap-align:start;background:var(--warn-bg);color:var(--warn);border-radius:12px;padding:10px 12px}
+.dl.urgent{background:var(--urgent-bg);color:var(--urgent)}
+a.dl{text-decoration:none;background:var(--card);border:1px solid var(--line);color:var(--accent)}
+a.dl .when{font-size:12px;color:var(--muted);margin-top:2px}
+.dl .num{font-size:22px;font-weight:700;line-height:1}
+.dl p{margin:4px 0 0;font-size:13px;line-height:1.35;color:var(--ink)}
+.count{font-size:14px;color:var(--muted);margin:0 0 4px}
+.month{font-family:"Barlow Condensed",system-ui,sans-serif;font-size:22px;font-weight:600;margin:22px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink);text-transform:capitalize}
+.ev{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px}
+.ev.past{opacity:.55}
+.date{text-align:center;border-right:1px solid var(--line);padding-right:10px}
+.date .num{font-size:30px;font-weight:700;line-height:1}
+.date .m{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.date .rng{font-size:12px;color:var(--muted);margin-top:2px}
+.ev h3{margin:0;font-size:16px;font-weight:600;line-height:1.3}
+.where{margin:3px 0 0;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:4px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tag{font-size:12px;padding:2px 8px;border-radius:6px;background:var(--paper);border:1px solid var(--line);display:inline-flex;align-items:center;gap:5px}
+.tag.lvl{background:var(--accent-soft);border-color:transparent;color:var(--accent);font-weight:600}
+.tag.tbc{border-style:dashed}
+.note{margin:8px 0 0;font-size:13px;padding:6px 8px;border-radius:8px;background:var(--warn-bg);color:var(--warn)}
+.note.urgent{background:var(--urgent-bg);color:var(--urgent)}
+.next{margin:6px 0 0;font-size:13px;color:var(--muted)}
+.empty{text-align:center;padding:32px 16px;color:var(--muted)}
+.empty button{margin-top:10px;background:var(--accent);color:var(--paper);border:none;border-radius:10px;padding:10px 16px;font-weight:600}
+footer{margin-top:28px;font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <svg viewBox="0 0 64 64" aria-hidden="true">
+    <circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".35"/>
+    <circle cx="32" cy="32" r="23" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".5"/>
+    <circle cx="32" cy="32" r="16" fill="currentColor" opacity=".9"/>
+    <circle cx="32" cy="32" r="10" fill="none" stroke="var(--paper)" stroke-width="1.2"/>
+    <circle cx="32" cy="32" r="3.5" fill="var(--paper)"/>
+  </svg>
+  <div>
+    <h1>Compétitions de tir en Essonne, saison 2026-2027</h1>
+    <p class="sub">Calendrier du CDTE, filtré selon tes disciplines</p>
+  </div>
+</header>
+
+<details class="profile" id="profile">
+  <summary><span>Mes disciplines <span class="hint" id="profile-hint"></span></span>
+    <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+  </summary>
+  <div class="pbody">
+    <div class="grp">
+      <h2>Familles <span class="act"><button type="button" id="no-fam">Tout effacer</button></span></h2>
+      <p class="intro" id="fam-intro">Sélectionne la ou les familles que tu pratiques. Tu pourras ensuite affiner par épreuve.</p>
+      <div class="chips" id="fam-chips"></div>
+      <div id="ep-blocks"></div>
+    </div>
+    <div class="grp">
+      <h2>École de tir</h2>
+      <p class="intro">Pour les jeunes tireurs, leurs parents et encadrants : challenges, critériums et championnats réservés aux écoles de tir.</p>
+      <div class="chips" id="edt-chips"></div>
+      <div id="edt-blocks"></div>
+    </div>
+    <div id="more">
+    <div class="grp">
+      <h2>Niveau</h2>
+      <div class="chips" id="lvl-chips"></div>
+    </div>
+    <div class="grp">
+      <label class="toggle"><span>Épreuves dont les disciplines restent à préciser</span><input type="checkbox" id="t-tbc"></label>
+      <label class="toggle"><span>Vie fédérale (AG, stages, remises de prix)</span><input type="checkbox" id="t-vie"></label>
+      <label class="toggle"><span>Épreuves passées</span><input type="checkbox" id="t-past"></label>
+    </div>
+    </div>
+  </div>
+</details>
+
+<section class="deadlines" id="deadlines" aria-labelledby="dl-title"></section>
+
+<p class="count" id="count" aria-live="polite"></p>
+<main id="list"></main>
+
+<footer>
+  Source : calendrier prévisionnel 2026/2027 du Comité Départemental de Tir de l'Essonne (V2 du 05/09/2026). Dates et lieux susceptibles d'évoluer : vérifie auprès de ton club avant de t'inscrire. Tes choix de disciplines sont enregistrés sur ton téléphone uniquement.
+</footer>
+</div>
+
+<script>
+const FAM={
+  pistolet:{l:"Pistolet",c:"#2F5E9E"},
+  carabine:{l:"Carabine",c:"#2E7D5B"},
+  arbalete:{l:"Arbalète",c:"#7A4FA3"},
+  cible_mobile:{l:"Cible mobile",c:"#C2410C"},
+  tar:{l:"TAR",c:"#A16207"},
+  armes_anciennes:{l:"Armes anciennes",c:"#7C5A43"},
+  silhouettes:{l:"Silhouettes métalliques",c:"#5B6B7F"},
+  appui:{l:"Bench Rest et IR900",c:"#0E7490"},
+  plateau:{l:"Plateau",c:"#BE185D"},
+  edt:{l:"École de tir",c:"#0F766E"}
+};
+const EP={
+  p10:["pistolet","Pistolet 10 m"],p5c:["pistolet","Pistolet 5 coups 10 m"],p2550:["pistolet","Pistolet 25/50 m"],
+  c10:["carabine","Carabine 10 m"],c50:["carabine","Carabine 50 m"],c300:["carabine","Carabine 300 m"],
+  af18:["arbalete","Field 18 m"],am10:["arbalete","Match 10 m"],am30:["arbalete","Match 30 m"],
+  cm10:["cible_mobile","Cible mobile 10 m"],cm50:["cible_mobile","Cible mobile 50 m"],
+  tar:["tar","TAR"],aa:["armes_anciennes","Armes anciennes"],
+  smf:["silhouettes","Field et carabine PC"],smp:["silhouettes","Pistolet PC"],
+  br:["appui","Bench Rest Rimfire"],ir:["appui","IR900"],
+  sk:["plateau","Skeet olympique"],fo:["plateau","Fosse olympique"],
+  e_p10:["edt","EdT pistolet 10 m"],e_c10:["edt","EdT carabine 10 m"],e_p5c:["edt","EdT pistolet 5 coups"],e_arb:["edt","EdT arbalète"],e_cm:["edt","EdT cible mobile"]
+};
+const LVL={chal:"Challenge",dpt:"Départemental",idpt:"Inter-départemental",reg:"Régional",fra:"France",vie:"Vie fédérale"};
+const LVL_FILTER=[["chal","Challenges"],["dpt","Départemental"],["reg","Régional"],["fra","France"]];
+const PUB={a:"Adultes",e:"École de tir",t:""};
+
+/* p: a=adultes, e=école de tir, t=tous ; eg: extrapolé à confirmer ; dt: date à préciser ; lt: lieu à préciser ; eq: par équipes */
+const E=[
+{id:"cheix",s:"2026-09-26",e:"2026-09-27",t:"Challenge Roger Cheix",l:"Courcouronnes",n:"chal",ep:["p10","c10"],p:"a"},
+{id:"agcdte",s:"2026-09-25",t:"AG du CDTE",l:"Villebon",n:"vie",ep:[],p:"t"},
+{id:"meric",s:"2026-10-10",e:"2026-10-11",t:"Trophée David Méric",l:"Ollainville",n:"chal",ep:["p10","c10"],p:"t"},
+{id:"stage",s:"2026-10-01",dt:1,d:"Oct.",t:"Stage de Villebon (ex-Valnay)",l:"Villebon",n:"vie",ep:[],p:"t"},
+{id:"dussolle",s:"2026-11-01",dt:1,d:"Nov.",t:"Challenge Dussolle",l:"Étampes",n:"chal",ep:["p10","c10"],p:"t"},
+{id:"dArb10",s:"2026-11-07",e:"2026-11-08",t:"Départementaux arbalète Field 18 m et Match 10 m",l:"Courcouronnes",n:"dpt",ep:["af18","am10"],p:"a",dl:"2026-11-15",nx:"rArbField"},
+{id:"dCm10",s:"2026-11-07",e:"2026-11-08",t:"Départementaux cible mobile 10 m",l:"Gif-sur-Yvette",n:"dpt",ep:["cm10"],p:"a",dl:"2026-11-15",nx:"rCm10"},
+{id:"dP5c",s:"2026-11-14",e:"2026-11-15",t:"Départementaux pistolet 5 coups 10 m",l:"Villebon",n:"dpt",ep:["p5c"],p:"a",dl:"2026-11-22",nx:"r10"},
+{id:"d10",s:"2026-11-14",e:"2026-11-22",d:"14, 21-22",t:"Départementaux précision 10 m",l:"Villemoisson",n:"dpt",ep:["p10","c10"],p:"a",dl:"2026-11-22",nx:"r10"},
+{id:"agligue",s:"2026-11-21",t:"AG de la Ligue de Tir d'Île-de-France",l:"Enghien",n:"vie",ep:[],p:"t"},
+{id:"sl1",s:"2026-11-27",e:"2026-11-29",t:"Challenge de l'Essonne Sylvie Lapierre, 1er tour",l:"Montgeron",n:"chal",ep:["p10","c10"],p:"a"},
+{id:"10h",s:"2026-12-05",t:"10 heures d'Ollainville",l:"Ollainville",n:"chal",ep:["p10","c10"],eg:1,p:"t"},
+{id:"k1",s:"2026-12-05",e:"2026-12-06",t:"Challenge Kamody, 1er tour",l:"Villebon",n:"chal",ep:["p10","c10"],p:"e"},
+{id:"rArbField",s:"2026-12-05",e:"2026-12-06",t:"Régionaux arbalète Field 18 m",l:"",lt:1,n:"reg",ep:["af18"],p:"a",nx:"f10"},
+{id:"rArbMatch",s:"2026-12-05",e:"2026-12-06",t:"Régionaux arbalète Match 10 m",l:"Villemomble",n:"reg",ep:["am10"],p:"a",nx:"f10"},
+{id:"rCm10",s:"2026-12-05",e:"2026-12-06",t:"Régionaux cible mobile 10 m",l:"Gif-sur-Yvette",n:"reg",ep:["cm10"],p:"a",nx:"f10"},
+{id:"r10",s:"2026-12-12",e:"2026-12-13",t:"Régionaux 10 m (précision et pistolet 5 coups)",l:"Goussainville",n:"reg",ep:["p10","c10","p5c"],p:"a",nx:"f10"},
+{id:"cdEdt",s:"2026-12-19",t:"Championnat des clubs écoles de tir, tour départemental",l:"Courcouronnes",n:"dpt",ep:["p10","c10"],p:"e",eq:1,dl:"2027-01-10",nx:"crEdt"},
+{id:"cdAd",s:"2026-12-20",t:"Championnat des clubs adultes, tour départemental",l:"Étréchy",n:"dpt",ep:["p10","c10"],p:"a",eq:1,dl:"2027-01-10",nx:"crAd"},
+{id:"sl2",s:"2027-01-09",e:"2027-01-10",t:"Challenge de l'Essonne Sylvie Lapierre, 2e tour",l:"Courcouronnes",n:"chal",ep:["p10","c10"],p:"a"},
+{id:"k2",s:"2027-01-23",e:"2027-01-24",t:"Challenge Kamody, 2e tour, et critérium départemental des écoles de tir",l:"Étampes",n:"chal",ep:["p10","c10"],p:"e",dl:"2027-01-24",dlt:"Critérium départemental des écoles de tir"},
+{id:"crAd",s:"2027-01-30",e:"2027-01-31",t:"Championnat des clubs adultes, tour régional",l:"Goussainville",n:"reg",ep:["p10","c10"],p:"a",eq:1,nx:"fcl"},
+{id:"crEdt",s:"2027-01-30",e:"2027-01-31",t:"Championnat des clubs écoles de tir, tour régional",l:"Goussainville",n:"reg",ep:["p10","c10"],p:"e",eq:1,nx:"fcl"},
+{id:"f10",s:"2027-02-08",e:"2027-02-13",t:"Championnat de France 10 et 18 m, toutes disciplines",l:"Châlons-en-Champagne",n:"fra",ep:["p10","p5c","c10","af18","am10","cm10"],p:"a"},
+{id:"critR",s:"2027-02-21",t:"Critérium régional des écoles de tir",l:"Villebon",n:"reg",ep:["p10","c10"],p:"e",nx:"m2l"},
+{id:"eArb",s:"2027-02-27",e:"2027-02-28",t:"Départementaux écoles de tir arbalète",l:"Courcouronnes, Étampes, Villemoisson",n:"dpt",ep:["am10"],p:"e",dl:"2027-02-28",nx:"rEdt"},
+{id:"eP5c",s:"2027-02-27",e:"2027-02-28",t:"Départementaux écoles de tir pistolet 5 coups et carabine 3x20",l:"Villebon, Palaiseau, Courcouronnes, Villemoisson",n:"dpt",ep:["p5c","c10"],p:"e",dl:"2027-02-28",nx:"rEdt"},
+{id:"eCm",s:"2027-02-27",e:"2027-02-28",t:"Départementaux écoles de tir cible mobile",l:"Gif-sur-Yvette",n:"dpt",ep:["cm10"],p:"e",dl:"2027-02-28",nx:"rEdt"},
+{id:"e10",s:"2027-02-27",e:"2027-02-28",t:"Départementaux écoles de tir 10 m",l:"Villemoisson",n:"dpt",ep:["p10","c10"],p:"e",dl:"2027-02-28",nx:"rEdt"},
+{id:"sl3",s:"2027-03-06",e:"2027-03-07",t:"Challenge de l'Essonne Sylvie Lapierre, 3e tour",l:"Ollainville",n:"chal",ep:["p10","c10"],p:"a"},
+{id:"fcl",s:"2027-03-13",e:"2027-03-14",t:"Championnat de France des clubs 10 m, adultes et écoles de tir",l:"Chalon-sur-Saône",n:"fra",ep:["p10","c10"],p:"t",eq:1},
+{id:"rEdt",s:"2027-03-20",e:"2027-03-21",t:"Régionaux écoles de tir",l:"",lt:1,n:"reg",ep:["p10","c10","p5c","am10","cm10"],p:"e",nx:"fEdt"},
+{id:"iSmf",s:"2027-03-20",e:"2027-03-21",t:"Inter-départementaux silhouettes métalliques Field et carabine PC",l:"Étréchy",n:"idpt",ep:["smf"],p:"a",dl:"2027-03-29",nx:"rSmf"},
+{id:"k3",s:"2027-03-28",e:"2027-03-29",t:"Challenge Kamody, 3e tour",l:"Courcouronnes",n:"chal",ep:["p10","c10"],p:"e"},
+{id:"dTar",s:"2027-04-01",dt:1,d:"Avr.",t:"Départementaux TAR",l:"Provins",lt:1,n:"dpt",ep:["tar"],p:"a",dl:"2027-04-04",nx:"rTar"},
+{id:"dAa",s:"2027-04-10",e:"2027-04-11",t:"Départementaux armes anciennes",l:"Soisy",n:"dpt",ep:["aa"],p:"a",dl:"2027-04-11",nx:"rAa"},
+{id:"dCm50",s:"2027-04-17",e:"2027-04-18",t:"Départementaux cible mobile 50 m",l:"Étampes",n:"dpt",ep:["cm50"],p:"a",dl:"2027-05-02",nx:"rCm50"},
+{id:"rSmf",s:"2027-04-17",e:"2027-04-18",t:"Régionaux silhouettes métalliques Field et carabine PC",l:"Étréchy",n:"reg",ep:["smf"],p:"a",nx:"fSm"},
+{id:"m2l",s:"2027-04-18",t:"Match des 2 Ligues (écoles de tir, sur sélection au Critérium régional)",l:"",lt:1,n:"reg",ep:["p10","c10"],eg:1,p:"e"},
+{id:"rBr",s:"2027-04-18",t:"Régionaux Bench Rest Rimfire",l:"Pontoise",n:"reg",ep:["br"],p:"a",nx:"fBr"},
+{id:"rTar",s:"2027-04-23",e:"2027-04-24",t:"Régionaux TAR",l:"Versailles",n:"reg",ep:["tar"],p:"a",nx:"fTar"},
+{id:"d2550",s:"2027-04-24",e:"2027-05-02",d:"24-26 avr, 1-2 mai",t:"Départementaux 25/50 m",l:"Villemoisson",n:"dpt",ep:["p2550","c50"],p:"a",dl:"2027-05-02",nx:"r2550"},
+{id:"rAa",s:"2027-04-30",e:"2027-05-02",t:"Régionaux armes anciennes",l:"Belloy-en-France",n:"reg",ep:["aa"],p:"a",nx:"fAa"},
+{id:"rIr",s:"2027-05-01",e:"2027-05-02",t:"Régionaux IR900",l:"Romainville",n:"reg",ep:["ir"],p:"a",nx:"fIr"},
+{id:"rAm30",s:"2027-05-01",dt:1,d:"Mai",t:"Régionaux arbalète Match 30 m",l:"",lt:1,n:"reg",ep:["am30"],p:"a",nx:"fAm30"},
+{id:"fEdt",s:"2027-05-06",e:"2027-05-09",t:"Championnat de France écoles de tir 10 m",l:"CNTS",n:"fra",ep:["p10","c10","p5c"],p:"e"},
+{id:"rCm50",s:"2027-05-22",e:"2027-05-23",t:"Régionaux cible mobile 50 m",l:"Étampes",n:"reg",ep:["cm50"],p:"a",nx:"fCm50"},
+{id:"iSmp",s:"2027-05-22",e:"2027-05-23",t:"Inter-départementaux silhouettes métalliques pistolet PC",l:"Étréchy",n:"idpt",ep:["smp"],p:"a",dl:"2027-05-23",nx:"rSmp"},
+{id:"fBr",s:"2027-05-27",e:"2027-05-30",t:"Championnat de France Bench Rest Rimfire",l:"CNTS",n:"fra",ep:["br"],p:"a"},
+{id:"r2550",s:"2027-05-29",e:"2027-06-06",d:"29-30 mai, 4-6 juin",t:"Régionaux 25/50 m",l:"Provins",n:"reg",ep:["p2550","c50"],p:"a",nx:"f2550"},
+{id:"fAm30",s:"2027-06-01",dt:1,d:"Juin",t:"Championnat de France arbalète Match 30 m",l:"Strasbourg",n:"fra",ep:["am30"],p:"a"},
+{id:"fIr",s:"2027-06-04",e:"2027-06-06",t:"Championnat de France IR900",l:"Bischwiller",n:"fra",ep:["ir"],p:"a"},
+{id:"fAa",s:"2027-06-09",e:"2027-06-13",t:"Championnat de France armes anciennes",l:"Volmerange-les-Mines",n:"fra",ep:["aa"],p:"a"},
+{id:"m3l",s:"2027-06-01",dt:1,d:"Juin",t:"Match des 3 Ligues (adultes)",l:"",lt:1,n:"reg",ep:[],p:"a"},
+{id:"rSmp",s:"2027-06-12",e:"2027-06-13",t:"Régionaux silhouettes métalliques pistolet PC",l:"Étréchy",n:"reg",ep:["smp"],p:"a",nx:"fSm"},
+{id:"r300",s:"2027-06-18",e:"2027-06-19",t:"Régionaux carabine 300 m",l:"Versailles",n:"reg",ep:["c300"],p:"a",nx:"f300"},
+{id:"rSk",s:"2027-06-20",t:"Régionaux skeet olympique",l:"",lt:1,n:"reg",ep:["sk"],p:"a",nx:"fSk"},
+{id:"recD",s:"2027-06-20",t:"Remise des récompenses adultes départementale",l:"",lt:1,n:"vie",ep:[],p:"a"},
+{id:"fTar",s:"2027-06-25",e:"2027-06-27",t:"Championnat de France TAR",l:"Vitrolles",n:"fra",ep:["tar"],p:"a"},
+{id:"recR",s:"2027-06-26",t:"Remise des récompenses adultes régionale",l:"Pontoise",n:"vie",ep:[],p:"a"},
+{id:"fCm50",s:"2027-07-08",e:"2027-07-11",t:"Championnat de France cible mobile 50 m",l:"Lingolsheim",n:"fra",ep:["cm50"],p:"a"},
+{id:"f2550",s:"2027-07-21",e:"2027-07-28",t:"Championnat de France 25/50 m",l:"Moulins",n:"fra",ep:["p2550","c50"],p:"a"},
+{id:"fSk",s:"2027-07-24",e:"2027-07-25",t:"Championnat de France skeet olympique",l:"",lt:1,n:"fra",ep:["sk"],p:"a"},
+{id:"fSm",s:"2027-08-01",e:"2027-08-07",t:"Championnat de France silhouettes métalliques",l:"Volmerange-les-Mines",n:"fra",ep:["smf","smp"],p:"a"},
+{id:"fFo",s:"2027-09-10",e:"2027-09-12",t:"Championnat de France fosse olympique",l:"CNTS",n:"fra",ep:["fo"],p:"a"},
+{id:"f300",s:"2027-09-16",e:"2027-09-19",t:"Championnat de France carabine 300 m",l:"CNTS",n:"fra",ep:["c300"],p:"a"}
+].sort((a,b)=>a.s.localeCompare(b.s));
+const TO_EDT={p10:"e_p10",c10:"e_c10",p5c:"e_p5c",am10:"e_arb",af18:"e_arb",cm10:"e_cm"};
+E.forEach(ev=>{if(ev.n==="vie")return;const m=ev.ep.map(k=>TO_EDT[k]).filter(Boolean);
+  if(ev.p==="e")ev.ep=[...new Set(m)];else if(ev.p==="t")ev.ep=[...new Set([...ev.ep,...m])];});
+const BYID=Object.fromEntries(E.map(x=>[x.id,x]));
+
+const MS=["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
+const ML=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+const parse=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const today=new Date();today.setHours(0,0,0,0);
+const fmtDay=s=>{const d=parse(s);return d.getDate()+" "+MS[d.getMonth()]};
+const daysTo=s=>Math.round((parse(s)-today)/864e5);
+
+const KEY="cdte-2026-27-profil-v2";
+const DEF={ep:[],lvl:LVL_FILTER.map(x=>x[0]),tbc:true,vie:false,past:false};
+let st;
+try{st=Object.assign({},DEF,JSON.parse(localStorage.getItem(KEY)||"null")||{})}catch(e){st=Object.assign({},DEF)}
+let firstVisit=true;
+try{firstVisit=!localStorage.getItem(KEY)}catch(e){}
+st.ep=(st.ep||[]).filter(k=>EP[k]);delete st.pub;
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+const epSet=()=>new Set(st.ep);
+
+function famState(f){const all=Object.keys(EP).filter(k=>EP[k][0]===f);const s=epSet();const n=all.filter(k=>s.has(k)).length;return n===0?"off":n===all.length?"all":"part"}
+
+function chip(label,pressed,onClick,cls,color){
+  const b=document.createElement("button");b.type="button";b.className="chip"+(cls?" "+cls:"");
+  b.setAttribute("aria-pressed",pressed?"true":"false");
+  if(color){const d=document.createElement("span");d.className="dot";d.style.background=color;b.appendChild(d)}
+  b.appendChild(document.createTextNode(label));b.onclick=onClick;return b;
+}
+
+function renderProfile(){
+  const fc=document.getElementById("fam-chips");fc.innerHTML="";
+  const blocks=document.getElementById("ep-blocks");blocks.innerHTML="";
+  document.getElementById("edt-chips").innerHTML="";document.getElementById("edt-blocks").innerHTML="";
+  Object.entries(FAM).forEach(([f,v])=>{
+    const fc=document.getElementById(f==="edt"?"edt-chips":"fam-chips");
+    const blocks=document.getElementById(f==="edt"?"edt-blocks":"ep-blocks");
+    const stt=famState(f);
+    const all=Object.keys(EP).filter(k=>EP[k][0]===f);
+    fc.appendChild(chip(v.l+(stt==="part"?" (en partie)":""),stt!=="off",()=>{
+      const s=epSet();
+      if(stt==="off")all.forEach(k=>s.add(k));else all.forEach(k=>s.delete(k));
+      st.ep=[...s];update();
+    },"",v.c));
+    if(stt!=="off"&&all.length>1){
+      const blk=document.createElement("div");blk.className="fam-block";blk.style.borderLeftColor=v.c;
+      const p=document.createElement("p");p.textContent=f==="edt"?"Épreuves école de tir":"Épreuves "+v.l.toLowerCase();blk.appendChild(p);
+      const row=document.createElement("div");row.className="chips";
+      all.forEach(k=>row.appendChild(chip(EP[k][1],epSet().has(k),()=>{
+        const s=epSet();s.has(k)?s.delete(k):s.add(k);st.ep=[...s];update();
+      },"small")));
+      blk.appendChild(row);blocks.appendChild(blk);
+    }
+  });
+  const lc=document.getElementById("lvl-chips");lc.innerHTML="";
+  LVL_FILTER.forEach(([k,l])=>lc.appendChild(chip(l,st.lvl.includes(k),()=>{
+    st.lvl=st.lvl.includes(k)?st.lvl.filter(x=>x!==k):[...st.lvl,k];update();
+  })));
+  document.getElementById("t-tbc").checked=st.tbc;
+  document.getElementById("t-vie").checked=st.vie;
+  document.getElementById("t-past").checked=st.past;
+  const fams=Object.keys(FAM).filter(f=>famState(f)!=="off").map(f=>FAM[f].l);
+  document.getElementById("profile-hint").textContent=fams.length?"· "+fams.join(", "):"· à choisir";
+  document.getElementById("more").hidden=!fams.length;
+  document.getElementById("fam-intro").hidden=!!fams.length;
+  document.getElementById("no-fam").hidden=!fams.length;
+}
+
+function lvlOk(n){if(n==="vie")return st.vie;const k=n==="idpt"?"dpt":n;return st.lvl.includes(k)}
+function epOk(ev){if(ev.n==="vie")return true;if(!st.ep.length)return false;if(!ev.ep.length)return st.tbc;const s=epSet();return ev.ep.some(k=>s.has(k))}
+function isPast(ev){return parse(ev.e||ev.s)<today&&!ev.dt}
+function visible(ev,ignorePast){return lvlOk(ev.n)&&epOk(ev)&&(ignorePast||st.past||!isPast(ev))}
+
+const pin='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function dateBlock(ev){
+  const d=parse(ev.s);
+  if(ev.dt)return `<div class="date"><div class="num">?</div><div class="m">${MS[d.getMonth()]}</div><div class="rng">à préciser</div></div>`;
+  let rng="";
+  if(ev.d)rng=ev.d;
+  else if(ev.e&&ev.e!==ev.s){const e=parse(ev.e);rng=e.getMonth()===d.getMonth()?"au "+e.getDate():"au "+fmtDay(ev.e)}
+  return `<div class="date"><div class="num">${d.getDate()}</div><div class="m">${MS[d.getMonth()]}</div>${rng?`<div class="rng">${esc(rng)}</div>`:""}</div>`;
+}
+
+function card(ev){
+  const tags=[`<span class="tag lvl">${LVL[ev.n]}</span>`];
+  if(ev.eq)tags.push(`<span class="tag">Par équipes</span>`);
+  if(ev.n!=="vie"){
+    if(ev.ep.length)ev.ep.forEach(k=>tags.push(`<span class="tag${ev.eg?" tbc":""}"><span class="dot" style="background:${FAM[EP[k][0]].c}"></span>${EP[k][1]}${ev.eg?" ?":""}</span>`));
+    else tags.push(`<span class="tag tbc">Disciplines à préciser</span>`);
+  }
+  let note="";
+  if(ev.dl){const n=daysTo(ev.dl);if(n>=0){note=`<p class="note">${ev.dlt?esc(ev.dlt)+" : à":"À"} tirer avant le ${fmtDay(ev.dl)}</p>`}}
+  let nx="";
+  if(ev.nx&&BYID[ev.nx]){const x=BYID[ev.nx];nx=`<p class="next">Qualificatif pour : ${esc(x.t)} (${x.dt?x.d:fmtDay(x.s)})</p>`}
+  const where=ev.l?esc(ev.l)+(ev.lt?" (à confirmer)":""):"Lieu à préciser";
+  return `<article id="ev-${ev.id}" class="ev${isPast(ev)?" past":""}">${dateBlock(ev)}<div><h3>${esc(ev.t)}</h3><p class="where">${pin}${where}</p><div class="tags">${tags.join("")}</div>${note}${nx}</div></article>`;
+}
+
+function renderDeadlines(){
+  const box=document.getElementById("deadlines");
+  if(!st.ep.length){box.innerHTML="";return}
+  const up=E.filter(ev=>ev.n!=="vie"&&!ev.dt&&visible(ev,true)&&parse(ev.e||ev.s)>=today).slice(0,5);
+  if(!up.length){box.innerHTML="";return}
+  box.innerHTML=`<h2 id="dl-title">Prochains rendez-vous</h2><div class="dl-row">${up.map(ev=>{const n=daysTo(ev.s);
+    const when=n<=0?"En cours ou aujourd'hui":n===1?"Demain":"Dans "+n+" jours";
+    return `<a class="dl" href="#ev-${ev.id}"><div class="num">${fmtDay(ev.s)}</div><p>${esc(ev.t)}</p><div class="when">${when} · ${esc(ev.l||"lieu à préciser")}</div></a>`}).join("")}</div>`;
+}
+
+function renderList(){
+  const list=document.getElementById("list");
+  if(!st.ep.length&&!st.vie){
+    document.getElementById("count").textContent="";
+    list.innerHTML=`<div class="empty"><p>Choisis tes disciplines pour voir les compétitions qui te concernent.</p><button type="button" id="open-p">Choisir mes disciplines</button></div>`;
+    document.getElementById("open-p").onclick=()=>{const p=document.getElementById("profile");p.open=true;p.scrollIntoView({behavior:"smooth"})};
+    return;
+  }
+  const items=E.filter(ev=>visible(ev));
+  const nComp=items.filter(ev=>ev.n!=="vie").length;
+  document.getElementById("count").textContent=nComp+" compétition"+(nComp>1?"s":"")+" correspond"+(nComp>1?"ent":"")+" à ta sélection";
+  if(!items.length){
+    list.innerHTML=`<div class="empty"><p>Aucune épreuve ne correspond à ta sélection. Ouvre « Mes disciplines » pour ajouter une famille ou un niveau.</p><button type="button" id="open-p">Choisir mes disciplines</button></div>`;
+    document.getElementById("open-p").onclick=()=>{const p=document.getElementById("profile");p.open=true;p.scrollIntoView({behavior:"smooth"})};
+    return;
+  }
+  let h="",lm="";
+  items.forEach(ev=>{const d=parse(ev.s);const m=ML[d.getMonth()]+" "+d.getFullYear();if(m!==lm){h+=`<h2 class="month">${m}</h2>`;lm=m}h+=card(ev)});
+  list.innerHTML=h;
+}
+
+function update(){save();renderProfile();renderDeadlines();renderList()}
+
+document.getElementById("no-fam").onclick=()=>{st.ep=[];update()};
+document.getElementById("t-tbc").onchange=e=>{st.tbc=e.target.checked;update()};
+document.getElementById("t-vie").onchange=e=>{st.vie=e.target.checked;update()};
+document.getElementById("t-past").onchange=e=>{st.past=e.target.checked;update()};
+if(firstVisit)document.getElementById("profile").open=true;
+renderProfile();renderDeadlines();renderList();
+</script>
+</body>
+</html>
